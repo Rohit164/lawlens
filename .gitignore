@@ -1,0 +1,99 @@
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+ENV/
+
+# ===========================
+# ML Models & Large Files
+# ===========================
+# Checkpoint folders (keep only final model)
+backend/models/summarization/
+backend/models/classification/
+Realistic_LJP-main/results/
+Realistic_LJP-main/logs/
+
+# Large model weight files (hosted on Hugging Face)
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.h5
+*.pkl
+*.ckpt
+
+# Training data (hosted on Hugging Face Datasets)
+backend/models/train_data.csv
+backend/models/val_data.csv
+backend/models/test_data.csv
+Realistic_LJP-main/Data/*.csv
+
+# ===========================
+# Databases
+# ===========================
+*.db
+*.sqlite
+*.sqlite3
+
+# ===========================
+# Environment & Secrets
+# ===========================
+.env
+.env.local
+.env.production
+.env.staging
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# ===========================
+# Frontend
+# ===========================
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/out/
+frontend/.cache/
+frontend/build/
+*.tsbuildinfo
+
+# ===========================
+# IDE & OS
+# ===========================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Logs & Temp
+# ===========================
+*.log
+logs/
+*.tmp
+*.temp
+results/
+runs/
+
+# ===========================
+# Testing
+# ===========================
+.pytest_cache/
+.coverage
+htmlcov/
