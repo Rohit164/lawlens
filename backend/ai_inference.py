@@ -9,9 +9,17 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForSeque
 import json
 import os
 from typing import Dict, List, Optional
-import shap
-import lime
-from lime.lime_text import LimeTextExplainer
+try:
+    import shap
+    SHAP_AVAILABLE = True
+except ImportError:
+    SHAP_AVAILABLE = False
+
+try:
+    from lime.lime_text import LimeTextExplainer
+    LIME_AVAILABLE = True
+except ImportError:
+    LIME_AVAILABLE = False
 
 class LawLensAI:
     """Main AI inference class for LawLens"""
@@ -181,7 +189,9 @@ class LawLensAI:
     
     def _explain_with_lime(self, text: str) -> Dict:
         """Generate LIME explanation"""
-        
+        if not LIME_AVAILABLE:
+            return {"method": "LIME", "error": "LIME not available in this environment", "prediction": self.predict_outcome(text)}
+
         def predict_proba(texts):
             """Prediction function for LIME"""
             inputs = self.classification_tokenizer(
