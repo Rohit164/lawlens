@@ -1,13 +1,14 @@
 # =============================================
 # Render Production Requirements
-# API-first approach: uses Groq + Gemini APIs
-# No torch/transformers needed on server
+# API-first: uses Groq + Gemini APIs
+# Uses pydantic v1 (pure Python, no Rust needed)
 # =============================================
 
-# FastAPI and server
-fastapi==0.110.0
+# FastAPI and server (v1 compatible)
+fastapi==0.95.2
 uvicorn[standard]==0.24.0
-python-multipart==0.0.9
+python-multipart==0.0.6
+starlette==0.27.0
 
 # Database
 asyncpg==0.29.0
@@ -19,12 +20,12 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-decouple==3.8
 
-# AI API clients (replaces local torch models)
+# Pydantic v1 - pure Python, no Rust compiler needed
+pydantic==1.10.13
+
+# AI API clients
 groq==0.11.0
 google-generativeai==0.8.3
-
-# Explainability
-lime==0.2.0.1
 
 # Payments
 razorpay==1.3.0
@@ -34,8 +35,6 @@ requests==2.32.3
 numpy==1.26.4
 pandas==2.2.3
 python-dotenv==1.0.1
-pydantic==2.6.4
-pydantic-settings==2.2.1
 
 # Translation
 sentencepiece==0.2.0
@@ -43,3 +42,6 @@ sentencepiece==0.2.0
 # File handling
 Pillow==10.4.0
 pdf2image==1.16.3
+
+# Explainability
+lime==0.2.0.1
