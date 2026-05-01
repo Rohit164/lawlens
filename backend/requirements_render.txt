@@ -1,7 +1,6 @@
 # =============================================
 # Render Production Requirements
-# Optimized for Render free tier (512MB RAM)
-# Heavy ML models loaded from Hugging Face on demand
+# Optimized for Render free tier
 # =============================================
 
 # FastAPI and server
@@ -19,12 +18,12 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-decouple==3.8
 
-# AI/ML - CPU only torch (much smaller than default)
-torch==2.1.0+cpu --extra-index-url https://download.pytorch.org/whl/cpu
+# AI/ML - use standard torch (Render will pick CPU version on Linux)
+torch==2.1.2
 transformers==4.46.0
 tokenizers==0.21.0
 
-# Explainability (lightweight)
+# Explainability
 lime==0.2.0.1
 
 # Payments
@@ -45,6 +44,6 @@ google-generativeai==0.8.3
 # Translation
 sentencepiece==0.2.0
 
-# OCR (lighter alternative)
+# File handling
 Pillow==10.4.0
 pdf2image==1.16.3
