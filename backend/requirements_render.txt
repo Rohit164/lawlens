@@ -1,16 +1,15 @@
 # =============================================
 # Render Production Requirements
-# Pure Python only - no C/Rust compilation
+# Forces binary wheels only - no compilation
 # =============================================
 
 # FastAPI and server
-fastapi==0.95.2
+fastapi==0.104.1
 uvicorn==0.24.0
 python-multipart==0.0.6
-starlette==0.27.0
 
-# Database - SQLite (built into Python, no driver needed)
-sqlalchemy==1.4.54
+# Database
+sqlalchemy==2.0.36
 alembic==1.14.0
 
 # Authentication
@@ -18,8 +17,10 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-decouple==3.8
 
-# Pydantic v1 - pure Python, no Rust needed
-pydantic==1.10.13
+# Pydantic v2 via binary wheel
+pydantic==2.6.4
+pydantic-core==2.16.3
+pydantic-settings==2.2.1
 
 # AI API clients
 groq==0.11.0
