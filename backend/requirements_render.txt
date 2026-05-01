@@ -1,6 +1,7 @@
 # =============================================
 # Render Production Requirements
-# Optimized for Render free tier
+# API-first approach: uses Groq + Gemini APIs
+# No torch/transformers needed on server
 # =============================================
 
 # FastAPI and server
@@ -18,10 +19,9 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-decouple==3.8
 
-# AI/ML - use standard torch (Render will pick CPU version on Linux)
-torch==2.1.2
-transformers==4.46.0
-tokenizers==0.21.0
+# AI API clients (replaces local torch models)
+groq==0.11.0
+google-generativeai==0.8.3
 
 # Explainability
 lime==0.2.0.1
@@ -36,10 +36,6 @@ pandas==2.2.3
 python-dotenv==1.0.1
 pydantic==2.10.4
 pydantic-settings==2.7.0
-
-# AI API clients
-groq==0.11.0
-google-generativeai==0.8.3
 
 # Translation
 sentencepiece==0.2.0
