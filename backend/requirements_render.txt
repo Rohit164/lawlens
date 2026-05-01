@@ -11,6 +11,7 @@ python-multipart==0.0.6
 # Database
 sqlalchemy==2.0.36
 alembic==1.14.0
+psycopg2-binary==2.9.9
 
 # Authentication
 python-jose[cryptography]==3.3.0
@@ -18,9 +19,9 @@ passlib[bcrypt]==1.7.4
 python-decouple==3.8
 
 # Pydantic v2 via binary wheel
-pydantic==2.6.4
-pydantic-core==2.16.3
-pydantic-settings==2.2.1
+pydantic==2.9.2
+pydantic-core==2.23.4
+pydantic-settings==2.5.2
 
 # AI API clients
 groq==0.11.0

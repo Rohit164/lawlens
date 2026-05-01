@@ -2,7 +2,7 @@ services:
   - type: web
     name: lawlens-backend
     runtime: python
-    buildCommand: pip install --only-binary=:all: -r requirements_render.txt || pip install -r requirements_render.txt
+    buildCommand: bash build.sh
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
@@ -11,7 +11,7 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
-      - key: GOOGLE_API_KEY
+      - key: GEMINI_API_KEY
         sync: false
       - key: FRONTEND_URL
         sync: false

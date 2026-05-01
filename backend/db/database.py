@@ -6,21 +6,24 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Always use SQLite locally — avoids psycopg2 / Neon dependency
-DATABASE_URL = "sqlite:///./lawlens.db"
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    echo=False
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./lawlens.db")
 
-# Create SessionLocal class
+# Render provides postgres:// but SQLAlchemy needs postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        echo=False
+    )
+else:
+    engine = create_engine(DATABASE_URL, echo=False)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Create Base class
 Base = declarative_base()
 
-# Dependency to get DB session
 def get_db():
     db = SessionLocal()
     try:
@@ -28,6 +31,5 @@ def get_db():
     finally:
         db.close()
 
-# Create tables
 def create_tables():
     Base.metadata.create_all(bind=engine)

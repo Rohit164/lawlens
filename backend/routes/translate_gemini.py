@@ -1,5 +1,5 @@
 """
-Translation route using Google Translate (fallback)
+Translation route using Google Gemini AI
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -12,17 +12,32 @@ import logging
 from db.database import get_db
 from db.models import User, Document, Translation
 from routes.auth import get_current_user
+from ai_tools_gemini import generate_response
 
-# Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Pydantic models
+LANGUAGE_NAMES = {
+    'hi': 'Hindi', 'mr': 'Marathi', 'ta': 'Tamil', 'bn': 'Bengali',
+    'gu': 'Gujarati', 'kn': 'Kannada', 'ml': 'Malayalam',
+    'pa': 'Punjabi', 'te': 'Telugu', 'ur': 'Urdu'
+}
+
+def translate_with_gemini(text: str, target_lang: str) -> dict:
+    lang_name = LANGUAGE_NAMES.get(target_lang, target_lang)
+    prompt = (
+        f"Translate the following legal text to {lang_name}. "
+        f"Preserve legal terminology accurately. Return only the translated text.\n\n{text}"
+    )
+    translated = generate_response(prompt, max_tokens=2000)
+    return {"translated_text": translated, "confidence": 85, "language": lang_name}
+
+
 class TranslateRequest(BaseModel):
     text: str
-    target_language: str  # Language code (hi, mr, ta, etc.)
+    target_language: str
     document_id: Optional[int] = None
     source_language: str = "en"
 
@@ -35,55 +50,47 @@ class TranslateResponse(BaseModel):
     confidence_score: float
     processing_time: float
 
+
 @router.post("/translate", response_model=TranslateResponse)
 async def translate_text(
     request: TranslateRequest,
     db: Session = Depends(get_db),
-    current_user: Optional[User] = Depends(lambda: None)  # Make auth optional
+    current_user: Optional[User] = Depends(lambda: None)
 ):
     """Translate text to Indian languages using Google Gemini AI"""
     start_time = datetime.now()
-    
-    # Supported languages
-    supported_langs = ['hi', 'mr', 'ta', 'bn', 'gu', 'kn', 'ml', 'pa', 'te', 'ur']
-    
-    if request.target_language not in supported_langs:
+
+    if request.target_language not in LANGUAGE_NAMES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Language {request.target_language} not supported. Supported: {', '.join(supported_langs)}"
+            detail=f"Language '{request.target_language}' not supported. Supported: {', '.join(LANGUAGE_NAMES)}"
         )
-    
+
     try:
-        logger.info(f"🌍 Translating to {request.target_language} using Gemini...")
-        
-        # Use Gemini for translation
-        gemini_result = translate_with_gemini(request.text, request.target_language)
-        
-        translated_text = gemini_result.get('translated_text', '')
-        confidence = gemini_result.get('confidence', 85) / 100.0
-        
-        # Save to database if user is authenticated
+        logger.info(f"Translating to {request.target_language} using Gemini...")
+        result = translate_with_gemini(request.text, request.target_language)
+        translated_text = result.get("translated_text", "")
+        confidence = result.get("confidence", 85) / 100.0
+
         if request.document_id and current_user:
             document = db.query(Document).filter(
                 Document.id == request.document_id,
                 Document.user_id == current_user.id
             ).first()
-            
             if document:
                 translation = Translation(
                     document_id=request.document_id,
                     language_code=request.target_language,
                     translated_text=translated_text,
-                    translation_model="gemini-pro",
+                    translation_model="gemini-1.5-flash",
                     confidence_score=confidence
                 )
                 db.add(translation)
                 db.commit()
-        
+
         processing_time = (datetime.now() - start_time).total_seconds()
-        
-        logger.info(f"✅ Translation complete in {processing_time:.2f}s")
-        
+        logger.info(f"Translation complete in {processing_time:.2f}s")
+
         return TranslateResponse(
             document_id=request.document_id,
             source_language=request.source_language,
@@ -93,40 +100,29 @@ async def translate_text(
             confidence_score=confidence,
             processing_time=processing_time
         )
-        
+
     except Exception as e:
         error_msg = str(e)
         logger.error(f"Translation error: {error_msg}")
-        
-        # Check if it's a quota error
         if "429" in error_msg or "quota" in error_msg.lower() or "ResourceExhausted" in error_msg:
-            logger.warning("⚠️ Gemini API quota exceeded for translation")
-            raise HTTPException(
-                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail="FREE_TIER_LIMIT_REACHED"
-            )
-        
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Translation failed: {str(e)}"
-        )
+            raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="FREE_TIER_LIMIT_REACHED")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Translation failed: {error_msg}")
+
 
 @router.get("/supported-languages")
 async def get_supported_languages():
-    """Get list of supported languages for translation"""
     return {
         "supported_languages": [
-            {"code": "hi", "name": "Hindi", "native_name": "हिंदी"},
-            {"code": "mr", "name": "Marathi", "native_name": "मराठी"},
-            {"code": "ta", "name": "Tamil", "native_name": "தமிழ்"},
-            {"code": "bn", "name": "Bengali", "native_name": "বাংলা"},
-            {"code": "gu", "name": "Gujarati", "native_name": "ગુજરાતી"},
-            {"code": "kn", "name": "Kannada", "native_name": "ಕನ್ನಡ"},
+            {"code": "hi", "name": "Hindi",     "native_name": "हिंदी"},
+            {"code": "mr", "name": "Marathi",   "native_name": "मराठी"},
+            {"code": "ta", "name": "Tamil",     "native_name": "தமிழ்"},
+            {"code": "bn", "name": "Bengali",   "native_name": "বাংলা"},
+            {"code": "gu", "name": "Gujarati",  "native_name": "ગુજરાતી"},
+            {"code": "kn", "name": "Kannada",   "native_name": "ಕನ್ನಡ"},
             {"code": "ml", "name": "Malayalam", "native_name": "മലയാളം"},
-            {"code": "pa", "name": "Punjabi", "native_name": "ਪੰਜਾਬੀ"},
-            {"code": "te", "name": "Telugu", "native_name": "తెలుగు"},
-            {"code": "ur", "name": "Urdu", "native_name": "اردو"}
+            {"code": "pa", "name": "Punjabi",   "native_name": "ਪੰਜਾਬੀ"},
+            {"code": "te", "name": "Telugu",    "native_name": "తెలుగు"},
+            {"code": "ur", "name": "Urdu",      "native_name": "اردو"},
         ],
-        "model": "Google Gemini Pro",
-        "note": "High-quality AI-powered translation for Indian languages"
+        "model": "Google Gemini 1.5 Flash"
     }
