@@ -42,7 +42,7 @@ const MultiBenchConsensus = () => {
     setConsensus(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/judge/multi-bench-consensus', {
+      const response = await fetch('${API_BASE}/api/judge/multi-bench-consensus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ opinions }),

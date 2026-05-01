@@ -153,7 +153,7 @@ const Pricing = () => {
       }
 
       // Create order
-      const orderResponse = await fetch('http://localhost:8000/api/payments/create-order', {
+      const orderResponse = await fetch('${API_BASE}/api/payments/create-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ const Pricing = () => {
         handler: async (response: any) => {
           try {
             // Verify payment
-            const verifyResponse = await fetch('http://localhost:8000/api/payments/verify-payment', {
+            const verifyResponse = await fetch('${API_BASE}/api/payments/verify-payment', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

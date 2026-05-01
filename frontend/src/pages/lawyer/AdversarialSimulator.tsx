@@ -21,7 +21,7 @@ const AdversarialSimulator = () => {
     if (!caseBrief.trim() || !userArguments.trim()) return;
     setIsProcessing(true); setAnalysis(null);
     try {
-      const response = await fetch('http://localhost:8000/api/lawyer/adversarial-simulation', {
+      const response = await fetch('${API_BASE}/api/lawyer/adversarial-simulation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_brief: caseBrief, user_arguments: userArguments }),

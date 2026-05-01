@@ -19,7 +19,7 @@ const LitigationForecasting = () => {
     if (!caseDetails.trim()) return;
     setIsProcessing(true); setForecast(null);
     try {
-      const response = await fetch('http://localhost:8000/api/lawyer/forecasting', {
+      const response = await fetch('${API_BASE}/api/lawyer/forecasting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_details: caseDetails }),

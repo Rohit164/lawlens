@@ -79,7 +79,7 @@ const Summarize: React.FC = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:8000/api/ocr/extract', {
+      const response = await fetch('${API_BASE}/api/ocr/extract', {
         method: 'POST',
         body: formData,
       });
@@ -117,7 +117,7 @@ const Summarize: React.FC = () => {
         setProgress(prev => Math.min(prev + 10, 90));
       }, 200);
 
-      const response = await fetch('http://localhost:8000/api/summarize/summarize', {
+      const response = await fetch('${API_BASE}/api/summarize/summarize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ const Summarize: React.FC = () => {
     setIsProcessing(true);
     
     try {
-      const response = await fetch('http://localhost:8000/api/translate/translate', {
+      const response = await fetch('${API_BASE}/api/translate/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ const RealTimeAssistant = () => {
     setIsProcessing(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/lawyer/real-time-assistance', {
+      const response = await fetch('${API_BASE}/api/lawyer/real-time-assistance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, context }),

@@ -38,7 +38,7 @@ const LegalDraftingAid = () => {
     if (facts.trim().length < 50) { setError('Please provide more detail (at least 50 characters).'); return; }
     setError(''); setIsProcessing(true); setDraft(null);
     try {
-      const response = await fetch('http://localhost:8000/api/lawyer/legal-drafting', {
+      const response = await fetch('${API_BASE}/api/lawyer/legal-drafting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document_type: documentType, facts, jurisdiction, citations }),

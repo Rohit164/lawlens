@@ -87,7 +87,7 @@ const Summarize = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:8000/api/ocr/extract', {
+      const response = await fetch('${API_BASE}/api/ocr/extract', {
         method: 'POST',
         body: formData,
       });
@@ -124,7 +124,7 @@ const Summarize = () => {
     try {
       setProgress(30);
 
-      const response = await fetch('http://localhost:8000/api/summarize/summarize', {
+      const response = await fetch('${API_BASE}/api/summarize/summarize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ const Summarize = () => {
     setIsTranslating(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/translate/translate', {
+      const response = await fetch('${API_BASE}/api/translate/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

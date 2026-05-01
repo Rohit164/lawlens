@@ -20,7 +20,7 @@ const ComplianceScanner = () => {
     setIsProcessing(true);
     setScanResults(null);
     try {
-      const response = await fetch('http://localhost:8000/api/lawyer/compliance', {
+      const response = await fetch('${API_BASE}/api/lawyer/compliance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filing_text: filing }),

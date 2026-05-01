@@ -34,7 +34,7 @@ const CauseListOptimizer = () => {
     setOptimization(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/judge/optimize-cause-list', {
+      const response = await fetch('${API_BASE}/api/judge/optimize-cause-list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cases }),

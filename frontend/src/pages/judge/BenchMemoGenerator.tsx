@@ -21,7 +21,7 @@ const BenchMemoGenerator = () => {
     setIsProcessing(true);
     setBenchMemo(null);
     try {
-      const response = await fetch('http://localhost:8000/api/judge/bench-memo', {
+      const response = await fetch('${API_BASE}/api/judge/bench-memo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_file: caseFile }),

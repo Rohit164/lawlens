@@ -20,7 +20,7 @@ const JudgmentDrafting = () => {
     if (caseDetails.trim().length < 50) { setError('Please provide more detail (at least 50 characters).'); return; }
     setError(''); setIsProcessing(true); setJudgment(null);
     try {
-      const response = await fetch('http://localhost:8000/api/judge/judgment-drafting', {
+      const response = await fetch('${API_BASE}/api/judge/judgment-drafting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_details: caseDetails, issue }),

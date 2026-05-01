@@ -79,7 +79,7 @@ const Dashboard = () => {
       }
 
       // Load user stats
-      const statsResponse = await fetch('http://localhost:8000/api/auth/me', {
+      const statsResponse = await fetch('${API_BASE}/api/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

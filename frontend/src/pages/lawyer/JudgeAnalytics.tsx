@@ -20,7 +20,7 @@ const JudgeAnalytics = () => {
     setIsProcessing(true);
     setAnalytics(null);
     try {
-      const response = await fetch('http://localhost:8000/api/lawyer/judge-analytics', {
+      const response = await fetch('${API_BASE}/api/lawyer/judge-analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ judge_name: judgeName, court }),

@@ -21,7 +21,7 @@ const HearingPreparation = () => {
     if (!caseFile.trim()) return;
     setIsProcessing(true); setHearingBrief(null);
     try {
-      const response = await fetch('http://localhost:8000/api/judge/hearing-preparation', {
+      const response = await fetch('${API_BASE}/api/judge/hearing-preparation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_file: caseFile, hearing_history: hearingHistory || null }),
